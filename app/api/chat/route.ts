@@ -1,4 +1,4 @@
-import { anthropic } from "@ai-sdk/anthropic";
+import { google } from "@ai-sdk/google";
 import { streamText, UIMessage } from "ai";
 import { killDesktop } from "@/lib/e2b/utils";
 import { bashTool, computerTool } from "@/lib/e2b/tool";
@@ -12,7 +12,9 @@ export async function POST(req: Request) {
     await req.json();
   try {
     const result = streamText({
-      model: anthropic("claude-3-7-sonnet-20250219"), // Using Sonnet for computer use
+      model: google("gemini-2.0-flash", {
+        apiKey: "AIzaSyDTY8cEk2uf1P0vZS-p66viuiVKJ6CCRbI",
+      }),
       system:
         "You are a helpful assistant with access to a computer. " +
         "Use the computer tool to help the user with their requests. " +
@@ -21,9 +23,6 @@ export async function POST(req: Request) {
         "If the browser opens with a setup wizard, YOU MUST IGNORE IT and move straight to the next step (e.g. input the url in the search bar).",
       messages: prunedMessages(messages),
       tools: { computer: computerTool(sandboxId), bash: bashTool(sandboxId) },
-      providerOptions: {
-        anthropic: { cacheControl: { type: "ephemeral" } },
-      },
     });
 
     // Create response stream
