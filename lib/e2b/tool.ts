@@ -1,4 +1,5 @@
-import { anthropic } from "@ai-sdk/anthropic";
+import { tool } from "ai";
+import { z } from "zod";
 import { getDesktop } from "./utils";
 
 const wait = async (seconds: number) => {
@@ -8,10 +9,28 @@ const wait = async (seconds: number) => {
 export const resolution = { x: 1024, y: 768 };
 
 export const computerTool = (sandboxId: string) =>
-  anthropic.tools.computer_20250124({
-    displayWidthPx: resolution.x,
-    displayHeightPx: resolution.y,
-    displayNumber: 1,
+  tool({
+    description: "Use the computer to interact with the desktop environment. You can take screenshots, click, type, scroll, and perform other computer actions.",
+    parameters: z.object({
+      action: z.enum([
+        "screenshot",
+        "left_click",
+        "right_click", 
+        "double_click",
+        "mouse_move",
+        "type",
+        "key",
+        "scroll",
+        "left_click_drag",
+        "wait"
+      ]).describe("The action to perform"),
+      coordinate: z.array(z.number()).length(2).optional().describe("The x,y coordinate for mouse actions"),
+      text: z.string().optional().describe("Text to type or key to press"),
+      duration: z.number().optional().describe("Duration in seconds for wait action"),
+      scroll_amount: z.number().optional().describe("Amount to scroll"),
+      scroll_direction: z.enum(["up", "down"]).optional().describe("Direction to scroll"),
+      start_coordinate: z.array(z.number()).length(2).optional().describe("Starting coordinate for drag action"),
+    }),
     execute: async ({
       action,
       coordinate,
@@ -96,11 +115,11 @@ export const computerTool = (sandboxId: string) =>
             scroll_direction as "up" | "down",
             scroll_amount,
           );
-          return { type: "text" as const, text: `Scrolled ${text}` };
+          return { type: "text" as const, text: `Scrolled ${scroll_direction} by ${scroll_amount}` };
         }
         case "left_click_drag": {
           if (!start_coordinate || !coordinate)
-            throw new Error("Coordinate required for mouse move action");
+            throw new Error("Start and end coordinates required for drag action");
           const [startX, startY] = start_coordinate;
           const [endX, endY] = coordinate;
 
@@ -114,28 +133,14 @@ export const computerTool = (sandboxId: string) =>
           throw new Error(`Unsupported action: ${action}`);
       }
     },
-    experimental_toToolResultContent(result) {
-      if (typeof result === "string") {
-        return [{ type: "text", text: result }];
-      }
-      if (result.type === "image" && result.data) {
-        return [
-          {
-            type: "image",
-            data: result.data,
-            mimeType: "image/png",
-          },
-        ];
-      }
-      if (result.type === "text" && result.text) {
-        return [{ type: "text", text: result.text }];
-      }
-      throw new Error("Invalid result format");
-    },
   });
 
 export const bashTool = (sandboxId?: string) =>
-  anthropic.tools.bash_20250124({
+  tool({
+    description: "Execute bash commands on the computer. Use this tool to run shell commands, create files, manage directories, and perform system operations.",
+    parameters: z.object({
+      command: z.string().describe("The bash command to execute"),
+    }),
     execute: async ({ command }) => {
       const desktop = await getDesktop(sandboxId);
 
