@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "AI SDK Computer Use Demo",
-  description: "A Next.js app that uses the AI SDK and Google Gemini 2.0 Flash to create a computer using agent.",
+  description: "A Next.js app that uses the AI SDK and Azure OpenAI to create a computer using agent.",
 };
 
 export default function RootLayout({
