@@ -1,4 +1,4 @@
-import { AzureOpenAI } from "openai";
+import OpenAI from "openai";
 import { UIMessage } from "ai";
 import { killDesktop, getDesktop } from "@/lib/e2b/utils";
 import { prunedMessages } from "@/lib/utils";
@@ -179,17 +179,14 @@ export async function POST(req: Request) {
   const { messages, sandboxId }: { messages: UIMessage[]; sandboxId: string } =
     await req.json();
   try {
-    // Configure Azure OpenAI client
-    const endpoint = process.env.AZURE_OPENAI_ENDPOINT || "https://ai-radoslawgryga3465ai579522695324.cognitiveservices.azure.com/";
-    const apiKey = process.env.AZURE_OPENAI_API_KEY || "43aXKuwwCgFvddXFFKMxXO8dfHA9Rt8Z2W76YY961D50Em5PX0hbJQQJ99BGACfhMk5XJ3w3AAAAACOGipRN";
-    const apiVersion = "2025-01-01-preview";
-    const deployment = "gpt-4.1";
+    // Configure DashScope OpenAI client
+    const apiKey = process.env.DASHSCOPE_API_KEY || "sk-65cde05b41fa4080b4c3b5397fad1508";
+    const baseURL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1";
+    const model = "qwen3-vl-235b-a22b-instruct";
 
-    const client = new AzureOpenAI({ 
-      endpoint, 
+    const client = new OpenAI({ 
       apiKey, 
-      apiVersion, 
-      deployment 
+      baseURL 
     });
 
     // Convert UI messages to OpenAI format
@@ -226,15 +223,15 @@ export async function POST(req: Request) {
       ...openAIMessages
     ];
 
-    // Create completion with Azure OpenAI with tool calling
+    // Create completion with DashScope OpenAI API with tool calling
     const response = await client.chat.completions.create({
-      model: deployment,
+      model: model,
       messages: messagesWithSystem,
       tools: [computerTool, bashTool],
       tool_choice: "auto",
       max_tokens: 16384,
       temperature: 0.7,
-      top_p: 0.95,
+      top_p: 0.8,
       frequency_penalty: 0,
       presence_penalty: 0,
       stop: null,
