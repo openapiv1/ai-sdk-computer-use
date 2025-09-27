@@ -1,12 +1,13 @@
 "use server";
 
 import { Sandbox } from "@e2b/desktop";
-import { resolution } from "./tool";
 
 export const getDesktop = async (id?: string) => {
   try {
     if (id) {
-      const connected = await Sandbox.connect(id);
+      const connected = await Sandbox.connect(id, {
+        apiKey: "e2b_6f718fcb928ee85abfe16b28ebecc6724d704727"
+      });
       const isRunning = await connected.isRunning();
       if (isRunning) {
         // await connected.stream.start();
@@ -14,8 +15,8 @@ export const getDesktop = async (id?: string) => {
       }
     }
 
-    const desktop = await Sandbox.create({
-      resolution: [resolution.x, resolution.y], // Custom resolution
+    const desktop = await Sandbox.create("desktop", {
+      apiKey: "e2b_6f718fcb928ee85abfe16b28ebecc6724d704727",
       timeoutMs: 300000, // Container timeout in milliseconds
     });
     await desktop.stream.start();

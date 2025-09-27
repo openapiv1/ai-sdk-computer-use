@@ -179,10 +179,10 @@ export async function POST(req: Request) {
   const { messages, sandboxId }: { messages: UIMessage[]; sandboxId: string } =
     await req.json();
   try {
-    // Configure DashScope OpenAI client
-    const apiKey = process.env.DASHSCOPE_API_KEY || "sk-65cde05b41fa4080b4c3b5397fad1508";
-    const baseURL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1";
-    const model = "qwen3-vl-235b-a22b-instruct";
+    // Configure xAI client for Grok-4-Fast-Non-Reasoning
+    const apiKey = "xai-uHAqv07PwV53H18WaK69WnqqqYYNYTRS3czdMuJqUqMgSUw3lsHrYLZIYg6fFSEwuCQBiTZpdhQqJznw";
+    const baseURL = "https://api.x.ai/v1";
+    const model = "grok-4-fast-non-reasoning";
 
     const client = new OpenAI({ 
       apiKey, 
@@ -213,17 +213,18 @@ export async function POST(req: Request) {
     const messagesWithSystem = [
       {
         role: 'system' as const,
-        content: "Jesteś asystentem AI, który ułatwia użytkownikom znajdowanie informacji. " +
-                "Masz dostęp do komputera. " +
-                "Używaj narzędzia komputera, aby pomóc użytkownikom w ich zadaniach. " +
-                "Używaj narzędzia bash do wykonywania poleceń na komputerze. Możesz tworzyć pliki i foldery za pomocą narzędzia bash. Zawsze preferuj narzędzie bash, gdy jest to możliwe dla zadania. " +
+        content: "Jesteś Grok, asystentem AI z dostępem do środowiska komputerowego. " +
+                "Możesz robić zrzuty ekranu, wchodzić w interakcję z pulpitem i wykonywać polecenia bash, aby pomagać użytkownikom w ich zadaniach. " +
+                "Używaj narzędzia computer do robienia zrzutów ekranu, klikania, pisania, przewijania i wykonywania innych akcji myszą/klawiaturą. " +
+                "Używaj narzędzia bash do wykonywania poleceń na komputerze. Możesz tworzyć pliki i foldery za pomocą narzędzia bash. " +
+                "Zawsze preferuj narzędzie bash, gdy jest to możliwe dla zadania. " +
                 "Upewnij się, że informujesz użytkownika, gdy oczekiwanie jest konieczne. " +
                 "Jeśli przeglądarka otworzy się z kreatorem konfiguracji, MUSISZ GO ZIGNOROWAĆ i przejść bezpośrednio do następnego kroku (np. wprowadź adres URL w pasku wyszukiwania)."
       },
       ...openAIMessages
     ];
 
-    // Create completion with DashScope OpenAI API with tool calling
+    // Create completion with xAI Grok API with tool calling
     const response = await client.chat.completions.create({
       model: model,
       messages: messagesWithSystem,

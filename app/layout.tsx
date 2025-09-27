@@ -4,8 +4,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
-  title: "AI SDK Computer Use Demo",
-  description: "A Next.js app that uses the AI SDK and Qwen3-VL-Plus to create a computer using agent.",
+  title: "AI SDK Computer Use Demo - Grok",
+  description: "A Next.js app that uses the AI SDK and Grok-4-Fast-Non-Reasoning to create a computer using agent.",
 };
 
 export default function RootLayout({
