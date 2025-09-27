@@ -16,8 +16,8 @@ export const ProjectInfo = () => {
         <p>
           This demo showcases a Computer Use Agent built with the{" "}
           <StyledLink href="https://sdk.vercel.ai">AI SDK</StyledLink>,{" "}
-          <StyledLink href="https://help.aliyun.com/zh/dashscope/developer-reference/compatibility-of-openai-with-dashscope">
-            Qwen3-VL-Plus via DashScope
+          <StyledLink href="https://x.ai/api">
+            Grok-4-Fast-Non-Reasoning via xAI
           </StyledLink>
           , and <StyledLink href="https://e2b.dev">e2b desktop</StyledLink>.
         </p>
@@ -64,7 +64,7 @@ export const DeployButton = () => {
   return (
     <Link
       target="_blank"
-      href={`https://vercel.com/new/clone?project-name=AI+SDK+Computer+Use+Demo&repository-name=ai-sdk-computer-use&repository-url=https%3A%2F%2Fgithub.com%2Fopenapiv1%2Fai-sdk-computer-use&demo-title=AI+SDK+Computer+Use+Demo&demo-url=https%3A%2F%2Fai-sdk-computer-use.vercel.app%2F&demo-description=A+chatbot+application+built+with+Next.js+demonstrating+Qwen3-VL-Plus+computer+use+capabilities&env=DASHSCOPE_API_KEY,E2B_API_KEY`}
+      href={`https://vercel.com/new/clone?project-name=AI+SDK+Computer+Use+Demo&repository-name=ai-sdk-computer-use&repository-url=https%3A%2F%2Fgithub.com%2Fopenapiv1%2Fai-sdk-computer-use&demo-title=AI+SDK+Computer+Use+Demo&demo-url=https%3A%2F%2Fai-sdk-computer-use.vercel.app%2F&demo-description=A+chatbot+application+built+with+Next.js+demonstrating+Grok+computer+use+capabilities&env=XAI_API_KEY,E2B_API_KEY`}
       className="flex flex-row gap-2 items-center bg-zinc-900 px-3 py-2 rounded-md text-zinc-50 hover:bg-zinc-950 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-50"
     >
       <VercelIcon size={14} />
